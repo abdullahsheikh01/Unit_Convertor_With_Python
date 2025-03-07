@@ -24,7 +24,17 @@ categories_unit_dict : dict = {
     "Energy":["Joule","Kilojoule","Gram calorie","Kilocalorie","Watt hour",
               "Kilowatt-hour","Electronvolt","British Thermal Unit","US Therm",
               "Foot-pound"],
-    "Frequency":["Hertz","Kilohertz","Megahertz","Gigahertz"]
+    "Frequency":["Hertz","Kilohertz","Megahertz","Gigahertz"],
+    "Fuel Econmy":[ "Kilometer per liter","Mile per US gallon","Mile per gallon",
+              "Litre per 100 kilometres"],
+    "Mass":["Kilogram","Tonne","Gram","Milligram","Microgram","Imperial ton","US ton",
+              "Stone","Pound","Ounce"],
+    "Plane Angle":["Degree","Radian","Arcsecond","Gradian","Milliradian",
+              "Minute of arc"],
+    "Pressure":["Bar","Pascal","Pound per square inch","Standard atmosphere","Torr"],
+    "Speed":["Metre per second","Mile per hour","Foot per second","Kilometre per hour",
+    "Knot"]
+
 }
 # Area Conversion Function
 def area_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
@@ -137,6 +147,35 @@ def frequency_conversion(from_unit:str,conversion_unit:str,conversion_value:floa
   except:
     print("Unit Not Found Error!")
   return secondary_value
+# Fuel Econmy Conversion Function
+def fuel_econmy_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  fuel_econmy_dict : dict[str,float] = {
+      "Kilometer per liter":1,
+      "Mile per US gallon":2.35215,
+      "Mile per gallon":2.82481,
+      "Litre per 100 kilometres":100.0
+  }
+  primary_value:float=conversion_value/fuel_econmy_dict[from_unit]
+  secondary_value:float=1.0
+  if to_unit == "Litre per 100 kilometres":
+    num : float = fuel_econmy_dict[from_unit]*100
+    if conversion_value == 0.0:
+      secondary_value = 0.0
+    else:
+      secondary_value = num/conversion_value
+  elif from_unit == "Litre per 100 kilometres":
+    num : float = conversion_value/100
+    if conversion_value == 0.0:
+      secondary_value = 0.0
+    else:
+      a = fuel_econmy_dict[to_unit]*100
+      secondary_value = a/conversion_value
+  else:
+      try:
+        secondary_value=primary_value*fuel_econmy_dict[conversion_unit]
+      except:
+        print("Unit Not Found Error!")
+  return secondary_value
 # Length Conversion Function
 def length_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
   length_dict : dict[str,float] = {
@@ -158,6 +197,76 @@ def length_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
   except:
     print("Unit Not Found Error!")
   return secondary_value
+# Mass Conversion Function
+def mass_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  mass_dict : dict[str,float] = {
+      "Kilogram":1.0,
+      "Tonne":0.001,
+      "Gram":1000.0,
+      "Milligram":1e+6,
+      "Microgram":1e+9,
+      "Imperial ton":0.000984207,
+      "US ton":0.00110231,
+      "Stone":0.157473,
+      "Pound":2.20462,
+      "Ounce":35.274
+  }
+  primary_value:float=conversion_value/mass_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*mass_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
+# Plane Angle Conversion Function
+def plane_angle_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  plane_angle_dict : dict[str,float] = {
+      "Degree":1.0,
+      "Radian":0.0174533,
+      "Arcsecond":3600.0,
+      "Gradian":1.11111,
+      "Milliradian":17.4533,
+      "Minute of arc":60
+  }
+  primary_value:float=conversion_value/plane_angle_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*plane_angle_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
+# Pressure Conversion Function
+def pressure_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  pressure_dict : dict[str,float] = {
+      "Bar":1.0,
+      "Pascal":100000,
+      "Pound per square inch":14.5038,
+      "Standard atmosphere":0.986923,
+      "Torr":750.062
+  }
+  primary_value:float=conversion_value/pressure_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*pressure_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
+# Speed Conversion Function
+def speed_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  speed_dict : dict[str,float] = {
+      "Metre per second":1,
+      "Mile per hour":2.23694,
+      "Foot per second":3.28084,
+      "Kilometre per hour":3.6,
+      "Knot":1.94384
+  }
+  primary_value:float=conversion_value/speed_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*speed_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
 # Categories Functions
 categories_functions : dict = {
   "Length":length_conversion,
@@ -166,14 +275,19 @@ categories_functions : dict = {
   "Digital Storage":digital_storage_conversion,
   "Energy":energy_conversion,
   "Frequency":frequency_conversion,
+  "Fuel Econmy":fuel_econmy_conversion,
+  "Mass":mass_conversion,
+  "Plane Angle":plane_angle_conversion,
+  "Pressure":pressure_conversion,
+  "Speed":speed_conversion
 }
 # Use Markdown to use page heading and link text combo
 st.markdown("""## Welcome to Python Unit Convertor by [Abdullah Shaikh](https://www.linkedin.com/in/abdullah-shaikh-29699b302/)""")
 # Text which tells users about website
 st.text("This unit convertor allows you to")
-# 
 category : str = st.selectbox("Select Category ",["Area","Data Transfer",
-    "Digital Storage","Energy","Frequency","Length"])
+    "Digital Storage","Energy","Frequency","Fuel Econmy","Length","Mass","Plane Angle",
+    "Pressure","Speed"])
 from_unit= st.selectbox("Write Unit by from to convert value ",categories_unit_dict[category])
 categories_unit_dict[category].remove(from_unit)
 to_unit : str = st.selectbox("Write Unit in which to convert value ",categories_unit_dict[category])
