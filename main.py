@@ -33,8 +33,15 @@ categories_unit_dict : dict = {
               "Minute of arc"],
     "Pressure":["Bar","Pascal","Pound per square inch","Standard atmosphere","Torr"],
     "Speed":["Metre per second","Mile per hour","Foot per second","Kilometre per hour",
-    "Knot"]
-
+    "Knot"],
+    "Temprature":["Degree Celsius","Fahrenheit","Kelvin"],
+    "Time":["Second","Nanosecond","Microsecond","Millisecond","Minute","Hour","Day",
+            "Week","Month","Year","Decade","Century"],
+    "Volume" : ["Liter","US liquid gallon","US liquid quart","US liquid pint",
+    "US legal cup","US fluid ounce","US tablespoon","US teaspoon","Cubic meter",
+    "Milliliter","Imperial gallon","Imperial quart","Imperial pint","Imperial cup",
+    "Imperial fluid ounce","Imperial tablespoon","Imperial teaspoon","Cubic foot",
+    "Cubic inch"]
 }
 # Area Conversion Function
 def area_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
@@ -267,6 +274,89 @@ def speed_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
   except:
     print("Unit Not Found Error!")
   return secondary_value
+#Temprature conversion function
+def temprature_conversion(from_unit:int,conversion_unit:str,conversion_value:float):
+  secondary_value:float=1.0
+  if from_unit=="Degree Celsius":
+    if conversion_unit=="Fahrenheit":
+      dividing_factor : float = 9/5
+      primary_value:float = conversion_value*dividing_factor
+      secondary_value = primary_value+32 
+    elif conversion_unit=="Kelvin":
+      secondary_value = conversion_value+273.15
+  elif from_unit=="Fahrenheit":
+    if conversion_unit=="Degree Celsius":
+      dividing_factor : float = 5/9
+      primary_value:float = conversion_value-32
+      secondary_value = primary_value*dividing_factor
+    elif conversion_unit=="Kelvin":
+      dividing_factor : float = 5/9
+      primary_value : float = conversion_value-32
+      middle_value : float = primary_value*dividing_factor
+      secondary_value : float = middle_value+273.15
+  elif from_unit == "Kelvin":
+    if conversion_unit == "Degree Celsius":
+      secondary_value = conversion_value-273.15
+    elif conversion_unit == "Fahrenheit":
+      dividing_factor : float = 9/5
+      primary_value : float = conversion_value-273.15
+      middle_value : float = primary_value*dividing_factor
+      secondary_value = middle_value+32
+
+  return secondary_value
+# Time Conversion Function
+def time_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  time_dict : dict[str,float] = {
+      "Second":1.0,
+      "Nanosecond":1e+9,
+      "Microsecond":1e+6,
+      "Millisecond":1000,
+      "Minute":0.0166667,
+      "Hour":0.000277778,
+      "Day":1.1574e-5,
+      "Week":1.6534e-6,
+      "Month":3.8052e-7,
+      "Year":3.171e-8,
+      "Decade":3.171e-9,
+      "Century":3.171e-10
+  }
+  primary_value:float=conversion_value/time_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*time_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
+# Volume Conversion Function
+def volume_conversion(from_unit:str,conversion_unit:str,conversion_value:float):
+  volume_dict : dict[str,float] ={
+    "Liter":1.0,
+    "US liquid gallon":0.264172,
+    "US liquid quart":1.05669,
+    "US liquid pint":2.11338,
+    "US legal cup":4.16667,
+    "US fluid ounce":33.814,
+    "US tablespoon":67.628,
+    "US teaspoon":202.884,
+    "Cubic meter":0.001,
+    "Milliliter":1000,
+    "Imperial gallon":0.219969,
+    "Imperial quart":0.879877,
+    "Imperial pint":1.75975,
+    "Imperial cup":3.51951,
+    "Imperial fluid ounce":35.1951,
+    "Imperial tablespoon":56.3121,
+    "Imperial teaspoon":168.936,
+    "Cubic foot":0.0353147,
+    "Cubic inch":61.0237
+  }
+  primary_value:float=conversion_value/volume_dict[from_unit]
+  secondary_value:float=1.0
+  try:
+    secondary_value=primary_value*volume_dict[conversion_unit]
+  except:
+    print("Unit Not Found Error!")
+  return secondary_value
 # Categories Functions
 categories_functions : dict = {
   "Length":length_conversion,
@@ -279,15 +369,18 @@ categories_functions : dict = {
   "Mass":mass_conversion,
   "Plane Angle":plane_angle_conversion,
   "Pressure":pressure_conversion,
-  "Speed":speed_conversion
+  "Speed":speed_conversion,
+  "Temprature":temprature_conversion,
+  "Time":time_conversion,
+  "Volume":volume_conversion
 }
 # Use Markdown to use page heading and link text combo
 st.markdown("""## Welcome to Python Unit Convertor by [Abdullah Shaikh](https://www.linkedin.com/in/abdullah-shaikh-29699b302/)""")
 # Text which tells users about website
-st.text("This unit convertor allows you to")
+st.text("This is a simple web application built with Streamlit that allows you to convert between various units of measurement.")
 category : str = st.selectbox("Select Category ",["Area","Data Transfer",
     "Digital Storage","Energy","Frequency","Fuel Econmy","Length","Mass","Plane Angle",
-    "Pressure","Speed"])
+    "Pressure","Speed","Temprature","Time","Volume"])
 from_unit= st.selectbox("Write Unit by from to convert value ",categories_unit_dict[category])
 categories_unit_dict[category].remove(from_unit)
 to_unit : str = st.selectbox("Write Unit in which to convert value ",categories_unit_dict[category])
